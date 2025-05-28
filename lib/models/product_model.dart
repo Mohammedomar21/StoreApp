@@ -6,7 +6,7 @@ class ProductModel
   final String description;
   final String image;
   final RatingModel rating;
-  ProductModel({
+  const ProductModel({
     required this.rating,
     required this.id,
     required this.title,
@@ -17,11 +17,11 @@ class ProductModel
   factory ProductModel.fromJson(jsonData)
   {
     return ProductModel(
-        id: jsonData['id'],
-        title: jsonData['title'],
-        price: jsonData['price'],
-        description: jsonData['description'],
-        image: jsonData['image'],
+        id: jsonData['id'] as int,
+        title: jsonData['title'] as String ,
+        price: jsonData['price'].toDouble() ,
+        description: jsonData['description'] as String,
+        image: jsonData['image'] as String,
         rating: RatingModel.formJson(jsonData['rating']),
     );
   }
@@ -31,15 +31,15 @@ class RatingModel
   final double rate;
   final int count;
 
-  RatingModel({
+ const  RatingModel({
     required this.rate,
     required this.count,
   });
   factory RatingModel.formJson(jsonData)
   {
     return RatingModel(
-        rate: jsonData['rate'],
-        count: jsonData['count'],
+        rate: jsonData['rate'].toDouble(),
+        count: jsonData['count'] as int,
     );
   }
 

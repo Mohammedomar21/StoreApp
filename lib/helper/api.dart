@@ -1,79 +1,92 @@
-
 import 'dart:convert';
 import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
-class Api{
-  Future<dynamic> get({required String url ,@required String? token}) async
-  {
-    log('hvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv');
-    Map<String,String> headers={};
-    headers.addAll({
-      'Content-Type':'application/x-www-urlencoded'
-    });
-    if(token !=null) {
-      headers.addAll({
-        'Authorization':'Bearer $token'
-      });
-    }
-    log('haaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaah');
+class Api {
+  Future<dynamic> get({required String url, required String? token}) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
 
-    http.Response response=await http.get(Uri.parse(url),);
-    log(response.statusCode as String);
-    if(response.statusCode==200)
-      {
-        
-        return jsonDecode(response.body);
-      }
-    else
-      {
-        log('hmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm');
-        throw Exception('there is problem with status code ${response.statusCode}');
-      }
-
-  }
-  Future<dynamic>post( {required String url,@required dynamic body,@required String? token }) async{
-    Map<String,String> headers={};
-    if(token !=null) {
-      headers.addAll({
-        'Authorization':'Bearer $token'
-      });
+    if (token != null) {
+      headers['Authorization'] = 'Bearer $token';
     }
-    http.Response response=  await http.post(Uri.parse(url),
-        body: body ,
-        headers:headers
-        );
-    if(response.statusCode==200) {
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+    log('Status Code: ${response.statusCode}');
+    log('Response Body: ${response.body}');
+
+    if (response.statusCode == 200) {
       return jsonDecode(response.body);
-    } else
-    {
-      throw Exception('there is problem with status code ${response.statusCode} with body ${jsonDecode(response.body)}');
+    } else {
+      throw Exception(
+        'GET failed: ${response.statusCode} - ${response.body}',
+      );
     }
-
   }
 
-  Future<dynamic>put( {required String url,@required dynamic body,@required String? token }) async{
-    Map<String,String> headers={};
-    headers.addAll({
-      'Content-Type':'application/x-www-urlencoded'
-    });
-    if(token !=null) {
-      headers.addAll({
-        'Authorization':'Bearer $token'
-      });
+  Future<dynamic> post({
+    required String url,
+    required dynamic body,
+    required String? token,
+  }) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+
+    if (token != null) {
+      headers['Authorization'] = 'Bearer $token';
     }
-    http.Response response=  await http.post(Uri.parse(url),
-        body: body ,
-        headers:headers
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: body,
     );
-    if(response.statusCode==200) {
-      return jsonDecode(response.body);
-    } else
-    {
-      throw Exception('there is problem with status code ${response.statusCode} with body ${jsonDecode(response.body)}');
-    }
 
+    log('POST Status: ${response.statusCode}');
+    log('Response Body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception(
+        'POST failed: ${response.statusCode} - ${response.body}',
+      );
+    }
+  }
+
+  Future<dynamic> put({
+    required String url,
+    @required dynamic body,
+    @required String? token,
+  }) async {
+    Map<String, String> headers = {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    };
+
+    if (token != null) {
+      headers['Authorization'] = 'Bearer $token';
+    }
+    log(body.toString());
+
+    final response = await http.put(
+      Uri.parse(url),
+      body: body,
+      headers: headers,
+
+    );
+
+    log('PUT Status: ${response.statusCode}');
+    log('Response Body: ${response.body}');
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception(
+        'PUT failed: ${response.statusCode} - ${response.body}',
+      );
+    }
   }
 }
